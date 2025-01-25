@@ -12,11 +12,14 @@ def emotion_detector(text_to_analyze):
     
     # parsing the text passed as argument to the function
     input_json = { "raw_document": { "text": text_to_analyze } }
-
+    emptyResponse ={'anger': None, 'disgust': None, 'fear': None, 'joy': None, 'sadness': None, 'dominant_emotion': None}
+    
     # POST request call to Emotion Predict Service from Watson NLP Library
     # Storing response as received from the Emotion Detection function
     response = requests.post(url, json=input_json, headers=header)
-
+    # checking server response for blank entries
+    if response.status_code == 400:
+        return emptyResponse
     # Converting text attribute of response to json
     formatted_response = json.loads(response.text)
     # Storing emotions and its scores from the response to a dictionary variable
